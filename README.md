@@ -65,11 +65,18 @@ pip install -e .
 
 ### Environment Variables
 
-
 The server requires the following environment variables:
 - `API_KEY`: Your Contextual AI API key
 - `AGENT_ID`: Your Contextual AI agent ID
 
+If you'd like to store these files in `.env` file you can specify them like so:
+
+```bash
+cat > .env << EOF
+API_KEY=key...
+AGENT_ID=...
+EOF
+``
 
 ### AI Interface Integration
 
@@ -79,28 +86,38 @@ This MCP server can be integrated with either Cursor IDE or Claude Desktop using
 
 1. First, find the path to your `uv` installation:
 ```bash
-which uv
+UV_PATH=$(which uv)
+echo $UV_PATH
 # Example output: /Users/username/miniconda3/bin/uv
 ```
 
 
 2. Create the configuration file using the full path from step 1:
-```json
+
+```bash
+cat > mcp.json << EOF
 {
  "mcpServers": {
    "ContextualAI-TechDocs": {
-     "command": "/Users/username/miniconda3/bin/uv",  # Use the full path from `which uv`
+     "command": "$UV_PATH", # make sure this is set properly
      "args": [
        "--directory",
-       "${workspaceFolder}",  # Will be replaced with your project path
+       "\${workspaceFolder}",  # Will be replaced with your project path
        "run",
        "server.py"
      ]
    }
  }
 }
+EOF
 ```
 
+3. Move to the correct folder location, see below for options:
+
+```bash
+mkdir -p .cursor/
+mv mcp.json .cursor/
+```
 
 Configuration locations:
 - For Cursor:
@@ -112,16 +129,12 @@ Configuration locations:
 
 ### Environment Setup
 
-
 This project uses `uv` for dependency management, which provides faster and more reliable Python package installation.
-
 
 ## Usage
 
-
 The server provides Contextual AI RAG capabilities using the python SDK, which can available a variety of commands accessible from MCP clients, such as Cursor IDE and Claude Desktop.
 The current server focuses on using the query command from the Contextual AI python SDK, however you could extend this to support other features such as listing all the agents, updating retrieval settings, updating prompts, extracting retrievals, or downloading metrics.
-
 
 ### Example Usage
 ```python

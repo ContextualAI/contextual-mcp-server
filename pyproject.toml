@@ -8,4 +8,6 @@ dependencies = [
     "contextual-client>=0.5.1",
     "httpx>=0.28.1",
     "mcp[cli]>=1.6.0",
+    "dotenv",
+    "uv"
 ]

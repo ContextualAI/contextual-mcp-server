@@ -1,8 +1,14 @@
 from contextual import ContextualAI
 from mcp.server.fastmcp import FastMCP
+import os
+import dotenv
 
-API_KEY = ""
-AGENT = ""
+# Load environment variables
+dotenv.load_dotenv()
+
+# Get API key and agent ID from environment variables
+API_KEY = os.getenv("API_KEY")
+AGENT_ID = os.getenv("AGENT_ID")
 
 # Create an MCP server
 mcp = FastMCP("Contextual AI RAG Platform")
@@ -15,7 +21,7 @@ def query(prompt: str) -> str:
         api_key=API_KEY,  # This is the default and can be omitted
     )
     query_result = client.agents.query.create(
-        agent_id=AGENT,
+        agent_id=AGENT_ID,
         messages=[{
             "content": prompt,
             "role": "user"

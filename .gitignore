@@ -8,3 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Credentials
+.env
+
+# Cursor
+.cursor/
+mcp.json
