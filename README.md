@@ -104,7 +104,7 @@ cat > mcp.json << EOF
        "--directory",
        "\${workspaceFolder}",  # Will be replaced with your project path
        "run",
-       "server.py"
+       "multi-agent/server.py"
      ]
    }
  }
