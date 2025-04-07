@@ -76,7 +76,7 @@ cat > .env << EOF
 API_KEY=key...
 AGENT_ID=...
 EOF
-``
+```
 
 ### AI Interface Integration
 
