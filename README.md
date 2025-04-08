@@ -57,7 +57,14 @@ pip install -e .
 The server requires modifications of settings or use.
 For example, the single use server should be customized with an appropriate docstring for your RAG Agent.
 
-The docstring for your query tool is critical as it helps the MCP client understand when to route questions to your RAG agent. Make it specific to your knowledge domain.
+The docstring for your query tool is critical as it helps the MCP client understand when to route questions to your RAG agent. Make it specific to your knowledge domain. Here is an example:
+```
+A research tool focused on financial data on the largest US firms
+```
+or
+```
+A research tool focused on technical documents for Omaha semiconductors
+```
 
 The server also requires the following settings from your RAG Agent:
 - `API_KEY`: Your Contextual AI API key
