@@ -1,14 +1,11 @@
 # Contextual MCP Server
 
-
 A Model Context Protocol (MCP) server that provides RAG (Retrieval-Augmented Generation) capabilities using Contextual AI. This server integrates with a variety of MCP clients. In this readme, we will show integration with the both Cursor IDE and Claude Desktop.
 
 
 ## Overview
 
-
 This MCP server acts as a bridge between AI interfaces (Cursor IDE or Claude Desktop) and a specialized Contextual AI agent. It enables:
-
 
 1. **Query Processing**: Direct your domain specific questions to a dedicated Contextual AI agent
 2. **Intelligent Retrieval**: Searches through comprehensive information in your knowledge base
@@ -20,16 +17,13 @@ This MCP server acts as a bridge between AI interfaces (Cursor IDE or Claude Des
 
 ### Integration Flow
 
-
 ```
 Cursor/Claude Desktop → MCP Server → Contextual AI RAG Agent
         ↑                  ↓             ↓                         
         └──────────────────┴─────────────┴─────────────── Response with citations
 ```
 
-
 ## Prerequisites
-
 
 - Python 3.10 or higher
 - Cursor IDE and/or Claude Desktop
@@ -39,13 +33,11 @@ Cursor/Claude Desktop → MCP Server → Contextual AI RAG Agent
 
 ## Installation
 
-
 1. Clone the repository:
 ```bash
 git clone https://github.com/ContextualAI/contextual-mcp-server.git
 cd contextual-mcp-server
 ```
-
 
 2. Create and activate a virtual environment:
 ```bash
@@ -53,19 +45,21 @@ python -m venv .venv
 source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
 ```
 
-
 3. Install dependencies:
 ```bash
 pip install -e .
 ```
 
-
 ## Configuration
 
+### Configure MCP Server
 
-### Environment Variables
+The server requires modifications of settings or use.
+For example, the single use server should be customized with an appropriate docstring for your RAG Agent.
 
-The server requires the following environment variables:
+The docstring for your query tool is critical as it helps the MCP client understand when to route questions to your RAG agent. Make it specific to your knowledge domain.
+
+The server also requires the following settings from your RAG Agent:
 - `API_KEY`: Your Contextual AI API key
 - `AGENT_ID`: Your Contextual AI agent ID
 
@@ -80,9 +74,7 @@ EOF
 
 ### AI Interface Integration
 
-
-This MCP server can be integrated with either Cursor IDE or Claude Desktop using the same configuration approach. Create or modify the MCP configuration file in the appropriate location:
-
+This MCP server can be integrated with a variety of clients. To use with either Cursor IDE or Claude Desktop create or modify the MCP configuration file in the appropriate location:
 
 1. First, find the path to your `uv` installation:
 ```bash
@@ -90,7 +82,6 @@ UV_PATH=$(which uv)
 echo $UV_PATH
 # Example output: /Users/username/miniconda3/bin/uv
 ```
-
 
 2. Create the configuration file using the full path from step 1:
 
@@ -141,8 +132,10 @@ The current server focuses on using the query command from the Contextual AI pyt
 # In Cursor, you might ask:
 "Show me the code for initiating the RF345 microchip?"
 
+# The MCP client will:
+1. Determine if this should be routed to the MCP Server
 
-# The MCP server will:
+# Then the MCP server will:
 1. Route the query to the Contextual AI agent
 2. Retrieve relevant documentation
 3. Generate a response with specific citations
@@ -159,26 +152,13 @@ The current server focuses on using the query command from the Contextual AI pyt
 
 ## Development
 
-
-### Project Structure
-```
-contextual-mcp-server/
-├── server.py           # Main MCP server implementation
-├── pyproject.toml      # Project dependencies and metadata
-└── README.md          # Documentation
-```
-
-
 ### Modifying the Server
 
-
 To add new capabilities:
-
 
 1. Add new tools by creating additional functions decorated with `@mcp.tool()`
 2. Define the tool's parameters using Python type hints
 3. Provide a clear docstring describing the tool's functionality
-
 
 Example:
 ```python
@@ -189,16 +169,7 @@ def new_tool(param: str) -> str:
    return result
 ```
 
-
-## Technical Details
-
-
-- Transport: stdio (local execution)
-- Protocol: Model Context Protocol (MCP)
-
-
 ## Limitations
-
 
 - The server runs locally and may not work in remote development environments
 - Tool responses are subject to Contextual AI API limits and quotas
@@ -206,4 +177,3 @@ def new_tool(param: str) -> str:
 
 
 For all the capabilities of Contextual AI, please check the [official documentation](https://docs.contextual.ai/).
-
