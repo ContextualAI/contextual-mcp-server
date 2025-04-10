@@ -1,7 +1,11 @@
 from contextual import ContextualAI
 from mcp.server.fastmcp import FastMCP
+import os
+from dotenv import load_dotenv
 
-API_KEY = ""
+# Load environment variables from .env file
+load_dotenv()
+API_KEY = os.getenv("CONTEXTUAL_API_KEY")
 
 # Create an MCP server
 mcp = FastMCP("Contextual AI RAG Platform")

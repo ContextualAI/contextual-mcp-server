@@ -67,14 +67,14 @@ A research tool focused on technical documents for Omaha semiconductors
 ```
 
 The server also requires the following settings from your RAG Agent:
-- `API_KEY`: Your Contextual AI API key
+- `CONTEXTUAL_API_KEY`: Your Contextual AI API key
 - `AGENT_ID`: Your Contextual AI agent ID
 
 If you'd like to store these files in `.env` file you can specify them like so:
 
 ```bash
 cat > .env << EOF
-API_KEY=key...
+CONTEXTUAL_API_KEY=key...
 AGENT_ID=...
 EOF
 ```
