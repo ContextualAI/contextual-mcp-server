@@ -17,6 +17,7 @@ JOB_ID_DEEPSEEK = (
 )
 JOB_ID_QWEN = "2e9c1615-c293-4475-b9d8-f9f6536bdf86"  # Qwen 3 tech report (35 pages)
 JOB_ID_BONDCAP = "794c58f2-38d4-454e-9a3e-05b8bab3dd5a"  # Bondcap AI report (340 pages)
+JOB_ID_USGOV_FIN_24 = "0817e279-3c45-49fe-b6f0-76010d0e5205"  # US Gov Financial report 2024 (247 pages)
 
 
 def initialize_navigable_document(job_id: str):
@@ -50,8 +51,8 @@ def initialize_document_agent(job_id: str) -> str:
     Initialize the document agent with a provided job id.
 
     Guidance:
-        - Use this to request the user to provide a job id for a document so you can answer questions about it.
         - When asked for an outline of the document, read the hierarchy and then look up an initial first few pages of the document before answering.
+        - Use this to request the user to provide a job id for a document so you can answer questions about it.
     """
     global navigable_document
     navigable_document = initialize_navigable_document(job_id)
