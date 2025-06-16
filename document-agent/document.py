@@ -25,7 +25,7 @@ class ParsedDocumentForAgent:
         """
         Read contents of the entire document as markdown (may be large)
         """
-        return self.parsed_document.markdown_document
+        return self.read_pages(list(range(len(self.parsed_document.pages))))
 
     def read_hierarchy(self) -> tuple[str, list[dict]]:
         """
