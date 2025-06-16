@@ -6,6 +6,7 @@ from document import ParsedDocumentForAgent
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
+from tiktoken import encoding_for_model
 
 load_dotenv()
 
@@ -17,7 +18,9 @@ JOB_ID_DEEPSEEK = (
 )
 JOB_ID_QWEN = "2e9c1615-c293-4475-b9d8-f9f6536bdf86"  # Qwen 3 tech report (35 pages)
 JOB_ID_BONDCAP = "794c58f2-38d4-454e-9a3e-05b8bab3dd5a"  # Bondcap AI report (340 pages)
-JOB_ID_USGOV_FIN_24 = "0817e279-3c45-49fe-b6f0-76010d0e5205"  # US Gov Financial report 2024 (247 pages)
+JOB_ID_USGOV_FIN_24 = (
+    "0817e279-3c45-49fe-b6f0-76010d0e5205"  # US Gov Financial report 2024 (247 pages)
+)
 
 
 def initialize_navigable_document(job_id: str):
@@ -30,6 +33,20 @@ def initialize_navigable_document(job_id: str):
     # Make agent navigable document
     navigable_document = ParsedDocumentForAgent(parsed_document)
     return navigable_document
+
+
+def count_tokens_fast(text: str) -> int:
+    """
+    Count tokens in a string using a fast approximation.
+    """
+    multiplier = 1.0
+    max_chars = 80000  # ~20k tokens
+    if len(text) > max_chars:
+        multiplier = len(text) / max_chars
+        text = text[:max_chars]
+    encoding = encoding_for_model("gpt-4o")
+    n_tokens = len(encoding.encode(text))
+    return int(n_tokens * multiplier)
 
 
 # Create an MCP server
@@ -56,7 +73,16 @@ def initialize_document_agent(job_id: str) -> str:
     """
     global navigable_document
     navigable_document = initialize_navigable_document(job_id)
-    return f"Document agent initialized for job id: {job_id}"
+    message = f"Document agent initialized for job id: {job_id}"
+    # add summary stats for the document
+    n_pages = len(navigable_document.parsed_document.pages)
+    n_doc_tokens = count_tokens_fast(navigable_document.read_document())
+    n_hierarchy_tokens = count_tokens_fast(navigable_document.read_hierarchy()[0])
+    stats = f"""
+        - document has {n_doc_tokens} tokens, {n_pages} pages 
+        - hierarchy has {n_hierarchy_tokens} tokens
+    """
+    return f"{message}\n{stats}"
 
 
 @mcp.tool()
