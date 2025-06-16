@@ -7,18 +7,18 @@ A specialized MCP server that provides document navigation and comprehension cap
 ## Overview
 
 The Document Agent allows you to:
+- Get AI-powered document comprehension through Cursor IDE
 - Navigate document hierarchies with structured table of contents
 - Read specific pages or sections of parsed documents  
-- Initialize different documents by `/parse` job ID from [Contextual AI](https://app.contextual.ai/akash-contextual-ai/components/parse)
-- Get AI-powered document comprehension through Cursor IDE
+- Initialize documents using the `/parse` job ID from [Contextual AI](https://app.contextual.ai/akash-contextual-ai/components/parse)
 
 ## Quick Setup
 
 ### 1. Prerequisites
-- Python 3.10+
-- Contextual AI API key
+- Python environment with 3.10+, following [this](../README.md)
 - `uv` package manager
 - Cursor IDE
+- Contextual AI API key
 - Document parsed through [Contextual AI's `/parse` component](https://app.contextual.ai/akash-contextual-ai/components/parse)
 
 ### 2. Environment Configuration
@@ -26,8 +26,8 @@ The Document Agent allows you to:
 Create a `.env` file in the contextual-mcp-server directory:
 ```bash
 API_KEY=your_contextual_ai_api_key_here
-AGENT=your_agent_id_here
 ```
+Get the path to your `uv` binary using `which uv` (e.g. /Users/username/miniconda3/envs/envname/bin/uv)
 
 ### 3. Cursor Integration
 
@@ -48,6 +48,7 @@ Add to your `.cursor/mcp.json`:
 }
 ```
 
+
 ## Key Components
 
 ### `server.py`
@@ -67,17 +68,15 @@ Contains `ParsedDocumentForAgent` class that wraps Contextual AI's parse output 
 ```python
 # In Cursor, ask questions like:
 "Initialize document agent with job ID abc-123"
-"What's the outline of this document?"
-"Read pages 5-10 of the technical specifications section"
+"Can you give me an overview of the document with page numbers"
+"Can you give me a summary of the parts of the document talking about US government debt?"
 ```
 
 **Note:** Job IDs are obtained from Contextual AI's [parse component](https://app.contextual.ai/akash-contextual-ai/components/parse) after uploading and processing your documents.
 
 The server comes pre-loaded with sample documents including:
-- DeepSeek scaling report (14 pages)
-- Qwen 3 technical report (35 pages) 
-- Bondcap AI report (340 pages)
 - US Government Financial report 2024 (247 pages)
+- Bondcap AI report (340 pages)
 
 ## Development
 
