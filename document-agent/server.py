@@ -39,13 +39,11 @@ def count_tokens_fast(text: str) -> int:
     """
     Count tokens in a string using a fast approximation.
     """
-    multiplier = 1.0
-    max_chars = 80000  # ~20k tokens
+    multiplier, max_chars = 1.0, 80000  # ~20k tokens
     if len(text) > max_chars:
         multiplier = len(text) / max_chars
         text = text[:max_chars]
-    encoding = encoding_for_model("gpt-4o")
-    n_tokens = len(encoding.encode(text))
+    n_tokens = len(encoding_for_model("gpt-4o").encode(text))
     return int(n_tokens * multiplier)
 
 
