@@ -11,7 +11,6 @@ from tiktoken import encoding_for_model
 load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
-AGENT = os.getenv("AGENT")
 
 JOB_ID_DEEPSEEK = (
     "55bd4791-560a-46f7-b66f-fbe11bfa8b36"  # DeepSeek scaling report (14 pages)
