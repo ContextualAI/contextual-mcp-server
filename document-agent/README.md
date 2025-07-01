@@ -79,4 +79,4 @@ To extend functionality, add new `@mcp.tool()` decorated functions in `server.py
 
 ## Extensions
 
-This is a simple prototype to show agentic RAG using purely function calls made possible by tools leveraging the document structure metadata inferred by `/parse` API. In practice, combining this pattern with text/semantic retrieval using [Contextual AI datastores](https://docs.contextual.ai/user-guides/beginner-guide) will allow scaling context for your agent to a corpus with 10-100x more such documents, while supporting dynamic retrieval of context, for complex synthesis and summarization.
+This is a simple prototype to show agentic RAG using purely function calls over tools enabled by document structure metadata inferred by the `/parse` API. In practice, combining with text/semantic retrieval using [Contextual AI datastores](https://docs.contextual.ai/user-guides/beginner-guide) will allow scaling context for your agent to a corpus with 10-100x more such documents, while supporting agentic retrieval of context, for complex synthesis and summarization.
