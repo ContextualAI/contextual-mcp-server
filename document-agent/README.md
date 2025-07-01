@@ -21,7 +21,7 @@ A quick overview of steps needed to get started:
     1. See details below on the config file and enable it in Cursor following [this](https://docs.cursor.com/context/model-context-protocol)
 3. Get a Contextual AI API key
     1. Add it to a `.env` file in your Cursor workspace as `CTXL_API_KEY=key-XX`
-4. Submit a `/parse` job with your document to get an ID
+4. Submit a `/parse` job with your document to get a job ID
     1. Use `uv run submit_parse_job.py "FILE_OR_URL"`
 
 
