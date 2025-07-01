@@ -9,7 +9,7 @@ This is a prototype showing how to:
 
 ![Chat screenshot](img/img-chat.png)
 
-**Note:** For faster iteration/caching, documents are referenced by Job IDs obtained from Contextual AI's [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file) after they've completed processing. The demo uses [US Govt Financial Report FY2024](https://www.fiscal.treasury.gov/files/reports-statements/financial-report/2024/01-16-2025-FR-(Final).pdf).
+> **Note:** For faster iteration/caching, documents are referenced by Job IDs obtained from Contextual AI's [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file) after they've completed processing. The demo uses [US Govt Financial Report FY2024](https://www.fiscal.treasury.gov/files/reports-statements/financial-report/2024/01-16-2025-FR-(Final).pdf).
 
 
 ## Quick Setup
