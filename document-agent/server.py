@@ -1,37 +1,23 @@
 import os
-from typing import Annotated
 
 from contextual import ContextualAI
-from document import ParsedDocumentForAgent
+from document import ParsedDocumentNavigator
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
-from pydantic import Field
 from tiktoken import encoding_for_model
 
 load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 
-JOB_ID_DEEPSEEK = (
-    "55bd4791-560a-46f7-b66f-fbe11bfa8b36"  # DeepSeek scaling report (14 pages)
-)
-JOB_ID_QWEN = "2e9c1615-c293-4475-b9d8-f9f6536bdf86"  # Qwen 3 tech report (35 pages)
-JOB_ID_BONDCAP = "794c58f2-38d4-454e-9a3e-05b8bab3dd5a"  # Bondcap AI report (340 pages)
-JOB_ID_USGOV_FIN_24 = (
-    "0817e279-3c45-49fe-b6f0-76010d0e5205"  # US Gov Financial report 2024 (247 pages)
-)
 
-
-def initialize_navigable_document(job_id: str):
-    # Create CTX client
+def initialize_document_navigator(parse_job_id: str):
     ctxl_client = ContextualAI(api_key=API_KEY)
-    # Fetch document
     parsed_document = ctxl_client.parse.job_results(
-        job_id, output_types=["markdown-per-page", "blocks-per-page"]
+        parse_job_id, output_types=["markdown-per-page", "blocks-per-page"]
     )
-    # Make agent navigable document
-    navigable_document = ParsedDocumentForAgent(parsed_document)
-    return navigable_document
+    document_navigator = ParsedDocumentNavigator(parsed_document)
+    return document_navigator
 
 
 def count_tokens_fast(text: str) -> int:
@@ -46,15 +32,11 @@ def count_tokens_fast(text: str) -> int:
     return int(n_tokens * multiplier)
 
 
-# Create an MCP server
-navigable_document = initialize_navigable_document(JOB_ID_BONDCAP)
-document_title = navigable_document.parsed_document.document_metadata.hierarchy.blocks[
-    0
-].markdown
+document_navigator = None
 mcp = FastMCP(
-    name=f"CTXL Document Agent for: {document_title}",
-    instructions=f"""
-    You are a document comprehension agent for the document titled: {document_title}.
+    name="CTXL Document Agent",
+    instructions="""
+    You are a document comprehension agent that can read, summarize and navigate a document.
     """,
 )
 
@@ -65,16 +47,16 @@ def initialize_document_agent(job_id: str) -> str:
     Initialize the document agent with a provided job id.
 
     Guidance:
-        - When asked for an outline of the document, read the hierarchy and then look up an initial first few pages of the document before answering.
+        - When asked for an outline of the document, read the hierarchy and then look up an initial few pages of the document before answering.
         - Use this to request the user to provide a job id for a document so you can answer questions about it.
     """
-    global navigable_document
-    navigable_document = initialize_navigable_document(job_id)
+    global document_navigator
+    document_navigator = initialize_document_navigator(job_id)
     message = f"Document agent initialized for job id: {job_id}"
     # add summary stats for the document
-    n_pages = len(navigable_document.parsed_document.pages)
-    n_doc_tokens = count_tokens_fast(navigable_document.read_document())
-    n_hierarchy_tokens = count_tokens_fast(navigable_document.read_hierarchy()[0])
+    n_pages = len(document_navigator.parsed_document.pages)
+    n_doc_tokens = count_tokens_fast(document_navigator.read_document())
+    n_hierarchy_tokens = count_tokens_fast(document_navigator.read_hierarchy()[0])
     stats = f"""
         - document has {n_doc_tokens} tokens, {n_pages} pages 
         - hierarchy has {n_hierarchy_tokens} tokens
@@ -91,33 +73,34 @@ def read_hierarchy() -> str:
     Guidance:
         - Use these results to look up the start and end page indexes to read the contents of a specific section for further context.
     """
-    return navigable_document.read_hierarchy()[
+    return document_navigator.read_hierarchy()[
         0
-    ]  # only return the markdown string for now
+    ]  # human/llm readable index structure for the document
 
 
 @mcp.tool()
 def read_pages(rationale: str, start_index: int, end_index: int) -> str:
     """
-    Read the contents of the document between the start and end page indexes, inclusive.
-    Provide a very brief rationale for what you are trying to read e.g. the name of the section or other context.
+    Read the contents of the document between the start and end page indexes, both inclusive.
+    Provide a brief 1-line rationale for what you are trying to read e.g. the name of the section or other context.
     """
     page_indexes = list(range(start_index, end_index + 1))
-    return navigable_document.read_pages(page_indexes)
+    return document_navigator.read_pages(page_indexes)
 
 
-# # Expose MCP tools for each method in the navigable document
+# NOTE: not used, but could be exposed with some control over context utilization
 # @mcp.tool()
 # def read_document() -> str:
 #     """
 #     Read contents of the entire document as markdown (may be large)
 #     """
-#     return navigable_document.read_document()
+#     return document_navigator.read_document()
 
+# NOTE: not used, as reading by page indexes was more flexible and reliable than getting LLM to reference headings by ID
 # @mcp.tool()
-# def read_hierarchy_section(heading_block_id: str) -> str:
+# def read_heading_contents(heading_block_id: str) -> str:
 #     """Read the contents of the document that are children of the given heading block referenced by `heading_block_id`"""
-#     return navigable_document.read_hierarchy_section(heading_block_id)
+#     return document_navigator.read_heading_contents(heading_block_id)
 
 
 if __name__ == "__main__":

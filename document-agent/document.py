@@ -1,12 +1,7 @@
-class ParsedDocumentForAgent:
+class ParsedDocumentNavigator:
     """
-    This class wraps `/parse` output exposing tool functions allowing an LLM agent to
+    This class wraps `/parse` API output exposing methods enabling an LLM agent to
     navigate and interact with the parsed document.
-
-    0. read_document() -> str
-    1. read_hierarchy() -> str, list[dict[id, level, markdown, page_index]]
-    2. read_pages(page_indexes) -> str
-    3. read_hierarchy_section(heading_block_id) -> str
     """
 
     def __init__(self, parsed_document):
@@ -29,11 +24,11 @@ class ParsedDocumentForAgent:
 
     def read_hierarchy(self) -> tuple[str, list[dict]]:
         """
-        Read the outline structure of the document as:
-            (i) human/LLM readable markdown nested list
-            (ii) LLM referenceable list of structured dicts
+        Read the parsed heading structure of the entire document.
 
-        Could provide either (ii) or both as context to an LLM to navigate the document and reference specific sections
+        Result is a tuple of:
+            (i) human/LLM readable document hierarchy with pages indexes (a.k.a. table of contents)
+            (ii) JSON list of headings in the document hierarchy
         """
         hierarchy_markdown = (
             self.parsed_document.document_metadata.hierarchy.table_of_contents
@@ -43,7 +38,7 @@ class ParsedDocumentForAgent:
         for block in self.parsed_document.document_metadata.hierarchy.blocks:
             hierarchy_list.append(
                 {
-                    "block_id": block.id,  # might need to translate the uuid to a LLM-friendly integer index instead
+                    "block_id": block.id,  # might need to translate uuid to a LLM-friendly integer index instead
                     "hierarchy_level": block.hierarchy_level,
                     "markdown": block.markdown,
                     "page_index": block.page_index,
@@ -64,7 +59,7 @@ class ParsedDocumentForAgent:
             )
         return content
 
-    def read_hierarchy_section(self, heading_block_id: str) -> str:
+    def read_heading_contents(self, heading_block_id: str) -> str:
         """
         Read the contents of the document that are children of the given heading block referenced by `heading_block_id`
         """
