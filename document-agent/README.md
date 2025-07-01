@@ -1,35 +1,33 @@
 # Document Agent MCP Server
 
-A specialized MCP server that provides document navigation and comprehension capabilities using Contextual AI's parsed documents.
+An MCP server to enable agents to understand and navigate large, complex documents with agentic RAG tools enabled by the Contextual AI [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file).
 
-![Cursor Integration](img-cursor.png)
+This is a prototype showing how to:
+- Get document comprehension right in Cursor (or any MCP client) with purely function calls
+- Ask more complex queries than possible with naive RAG
+- Get interpretable attributions via tool call traces as the agent navigates a document
 
-## Overview
+![Chat screenshot](img/img-chat.png)
 
-The Document Agent allows you to:
-- Get AI-powered document comprehension through Cursor IDE
-- Navigate document hierarchies with structured table of contents
-- Read specific pages or sections of parsed documents  
-- Initialize documents using the `/parse` job ID from [Contextual AI](https://app.contextual.ai/akash-contextual-ai/components/parse)
+**Note:** For faster iteration/caching, documents are referenced by Job IDs obtained from Contextual AI's [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file) after they've completed processing. The demo uses [US Govt Financial Report FY2024](https://www.fiscal.treasury.gov/files/reports-statements/financial-report/2024/01-16-2025-FR-(Final).pdf).
+
 
 ## Quick Setup
 
-### 1. Prerequisites
-- Python environment with 3.10+, following [this](../README.md)
-- `uv` package manager
-- Cursor IDE
-- Contextual AI API key
-- Document parsed through [Contextual AI's `/parse` component](https://app.contextual.ai/akash-contextual-ai/components/parse)
+A quick overview of steps needed to get started:
+1. Setup your local python environment with `uv`
+    1. Follow [this](../README.md#installation) to create an env and install dependencies
+2. Create a `.cursor/mcp.json` file
+    1. See details below on the config file and enable it in Cursor following [this](https://docs.cursor.com/context/model-context-protocol)
+3. Get a Contextual AI API key
+    1. Add it to a `.env` file in your Cursor workspace as `CTXL_API_KEY=key-XX`
+4. Submit a `/parse` job with your document to get an ID
+    1. Use `uv run submit_parse_job.py "FILE_OR_URL"`
 
-### 2. Environment Configuration
 
-Create a `.env` file in the contextual-mcp-server directory:
-```bash
-API_KEY=your_contextual_ai_api_key_here
-```
+### MCP JSON config file
+
 Get the path to your `uv` binary using `which uv` (e.g. /Users/username/miniconda3/envs/envname/bin/uv)
-
-### 3. Cursor Integration
 
 Add to your `.cursor/mcp.json`:
 ```json
@@ -48,6 +46,8 @@ Add to your `.cursor/mcp.json`:
 }
 ```
 
+This can be configured for use with other MCP clients e.g. [Claude Desktop](https://modelcontextprotocol.io/quickstart/user).
+
 
 ## Key Components
 
@@ -58,10 +58,9 @@ Main MCP server with three core tools:
 - `read_pages(rationale, start_index, end_index)` - Read specific page ranges
 
 ### `document.py` 
-Contains `ParsedDocumentForAgent` class that wraps Contextual AI's parse output for easy navigation:
-- Document hierarchy extraction
+Contains `ParsedDocumentNavigator` class that wraps Contextual AI's parse output for easy navigation:
+- Access Document hierarchy as a kind of [llms.txt](https://llmstxt.org/) file
 - Page-based content retrieval
-- Section-based reading capabilities
 
 ## Usage Examples
 
@@ -69,15 +68,15 @@ Contains `ParsedDocumentForAgent` class that wraps Contextual AI's parse output 
 # In Cursor, ask questions like:
 "Initialize document agent with job ID abc-123"
 "Can you give me an overview of the document with page numbers"
-"Can you give me a summary of the parts of the document talking about US government debt?"
+"Can you summarize parts of the document about US government debt?"
 ```
 
-**Note:** Job IDs are obtained from Contextual AI's [parse component](https://app.contextual.ai/akash-contextual-ai/components/parse) after uploading and processing your documents.
-
-The server comes pre-loaded with sample documents including:
-- US Government Financial report 2024 (247 pages)
-- Bondcap AI report (340 pages)
 
 ## Development
 
-To extend functionality, add new `@mcp.tool()` decorated functions in `server.py`. The tools automatically become available in Cursor through the MCP protocol.
+To extend functionality, add new `@mcp.tool()` decorated functions in `server.py`. Refer to [this](../README.md#development) for more. 
+
+
+## Extensions
+
+This is a simple prototype to show agentic RAG enabled purely by better navigation tools made possible by the `/parse` API. In practice, combining this with text/semantic retrieval using [Contextual AI datastores](https://docs.contextual.ai/user-guides/beginner-guide) will allow scaling context for your agent to a corpus with 10-100x more documents, while supporting complex synthesis and summarization.

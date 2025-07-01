@@ -8,11 +8,11 @@ from tiktoken import encoding_for_model
 
 load_dotenv()
 
-API_KEY = os.getenv("API_KEY")
+CTXL_API_KEY = os.getenv("CTXL_API_KEY")
 
 
 def initialize_document_navigator(parse_job_id: str):
-    ctxl_client = ContextualAI(api_key=API_KEY)
+    ctxl_client = ContextualAI(api_key=CTXL_API_KEY)
     parsed_document = ctxl_client.parse.job_results(
         parse_job_id, output_types=["markdown-per-page", "blocks-per-page"]
     )
@@ -49,6 +49,7 @@ def initialize_document_agent(job_id: str) -> str:
     Guidance:
         - When asked for an outline of the document, read the hierarchy and then look up an initial few pages of the document before answering.
         - Use this to request the user to provide a job id for a document so you can answer questions about it.
+        - When answering questions, provide references to page indexes used in the answer.
     """
     global document_navigator
     document_navigator = initialize_document_navigator(job_id)
