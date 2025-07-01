@@ -1,6 +1,6 @@
-# Document Agent MCP Server
+# Document Navigator Agent
 
-An MCP server to enable agents to understand and navigate large, complex documents with agentic RAG tools enabled by the Contextual AI [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file).
+An MCP server to enable agents to understand and navigate large, complex documents with agentic RAG tools enabled by document metadata inferred by the Contextual AI [/parse API](https://docs.contextual.ai/api-reference/parse/parse-file).
 
 This is a prototype showing how to:
 - Get document comprehension right in Cursor (or any MCP client) with purely function calls
@@ -33,7 +33,7 @@ Add to your `.cursor/mcp.json`:
 ```json
 {
  "mcpServers": {
-   "ContextualAI-DocumentAgent": {
+   "ContextualAI-DocumentNavigatorAgent": {
      "command": "/path/to/your/uv",
      "args": [
        "--directory",
@@ -79,4 +79,4 @@ To extend functionality, add new `@mcp.tool()` decorated functions in `server.py
 
 ## Extensions
 
-This is a simple prototype to show agentic RAG using purely function calls made possible by the document structure inferred by `/parse` API. In practice, combining this pattern with text/semantic retrieval using [Contextual AI datastores](https://docs.contextual.ai/user-guides/beginner-guide) will allow scaling context for your agent to a corpus with 10-100x more such documents, while supporting complex synthesis and summarization.
+This is a simple prototype to show agentic RAG using purely function calls made possible by tools leveraging the document structure metadata inferred by `/parse` API. In practice, combining this pattern with text/semantic retrieval using [Contextual AI datastores](https://docs.contextual.ai/user-guides/beginner-guide) will allow scaling context for your agent to a corpus with 10-100x more such documents, while supporting complex synthesis and summarization.

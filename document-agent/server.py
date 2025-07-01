@@ -34,9 +34,9 @@ def count_tokens_fast(text: str) -> int:
 
 document_navigator = None
 mcp = FastMCP(
-    name="CTXL Document Agent",
+    name="CTXL Document Navigator",
     instructions="""
-    You are a document comprehension agent that can read, summarize and navigate a document.
+    You are a document comprehension agent that uses tools to navigate, read and understand a document.
     """,
 )
 
