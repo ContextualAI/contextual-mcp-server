@@ -1,11 +1,14 @@
 # Contextual MCP Server
 
-A Model Context Protocol (MCP) server that provides RAG (Retrieval-Augmented Generation) capabilities using Contextual AI. This server integrates with a variety of MCP clients. In this readme, we will show integration with the both Cursor IDE and Claude Desktop.
+A Model Context Protocol (MCP) server that provides RAG (Retrieval-Augmented Generation) capabilities using Contextual AI. This server integrates with a variety of MCP clients. It provides flexibility in you can decide what functionality to offer in the server. In this readme, we will show integration with the both Cursor IDE and Claude Desktop.
+
+Contextual AI now offers a hosted server inside the platform available at: https://mcp.app.contextual.ai/mcp/ 
+After you connect to the server, you can use the tools, such as query, provided by the platform MCP server.
 
 
 ## Overview
 
-This MCP server acts as a bridge between AI interfaces (Cursor IDE or Claude Desktop) and a specialized Contextual AI agent. It enables:
+An MCP server acts as a bridge between AI interfaces (Cursor IDE or Claude Desktop) and a specialized Contextual AI agent. It enables:
 
 1. **Query Processing**: Direct your domain specific questions to a dedicated Contextual AI agent
 2. **Intelligent Retrieval**: Searches through comprehensive information in your knowledge base
@@ -55,7 +58,7 @@ pip install -e .
 ### Configure MCP Server
 
 The server requires modifications of settings or use.
-For example, the single use server should be customized with an appropriate docstring for your RAG Agent.
+For example, the single_agent server should be customized with an appropriate docstring for your RAG Agent.
 
 The docstring for your query tool is critical as it helps the MCP client understand when to route questions to your RAG agent. Make it specific to your knowledge domain. Here is an example:
 ```
@@ -78,6 +81,8 @@ API_KEY=key...
 AGENT_ID=...
 EOF
 ```
+
+The repo also contains more advance MPC servers for multi-agent systems or a [document-agent](https://www.linkedin.com/feed/update/urn:li:activity:7346595035770929152/).
 
 ### AI Interface Integration
 
