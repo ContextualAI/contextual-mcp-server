@@ -2,10 +2,13 @@
 
 A Model Context Protocol (MCP) server that provides RAG (Retrieval-Augmented Generation) capabilities using Contextual AI. This server integrates with a variety of MCP clients. It provides flexibility in you can decide what functionality to offer in the server. In this readme, we will show integration with the both Cursor IDE and Claude Desktop.
 
+<a href="https://glama.ai/mcp/servers/@ContextualAI/contextual-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@ContextualAI/contextual-mcp-server/badge" alt="Contextual Server MCP server" />
+</a>
+
 Contextual AI now offers a hosted server inside the platform available at: https://mcp.app.contextual.ai/mcp/   
 After you connect to the server, you can use the tools, such as query, provided by the platform MCP server.  
 For a complete walkthrough, check out the MCP [user guide](https://docs.contextual.ai/user-guides/mcp-server).
-
 
 ## Overview
 
